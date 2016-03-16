@@ -4,12 +4,15 @@ package Devel::Trace;
 $VERSION = '0.12';
 $TRACE = 1;
 
+open OUT, '>&', STDERR;
+$oldfh = select(OUT); $| = 1; select($oldfh);
+
 # This is the important part.  The rest is just fluff.
 sub DB::DB {
   return unless $TRACE;
   my ($p, $f, $l) = caller;
   my $code = \@{"::_<$f"};
-  print STDERR ">> $f:$l: $code->[$l]";
+  print OUT ">> $f:$l: $code->[$l]";
 }
 
 
